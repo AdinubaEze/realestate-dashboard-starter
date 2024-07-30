@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales management dashboard</title>
+    <style type="text/css">
+      html[data-theme='light']{
+        background: #f1f1f1;
+      }
+      html[data-theme='dark']{
+        background: #0A0A0C;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+<script>
+  (function(){
+    const storageKey = "theme";
+    function setThemeOnDocumentHTML(mode){
+      document.firstElementChild.setAttribute("data-theme", mode ? 'dark':'light');
+    }
+
+    let preferDarkQuery = '(prefers-color-sheme: dark)';
+    let mql = window.matchMedia(preferDarkQuery);
+    let supportsColorSchemeQuery = mql.media === preferDarkQuery;
+    let localStorageTheme = null;
+    try{
+      localStorageTheme = localStorage.getItem(storageKey)
+    }catch(err){}
+
+    let localStorageExists = localStorageTheme !== null;
+    if(localStorageExists){
+      localStorageTheme = JSON.parse(localStorageTheme);
+    }
+
+    if(localStorageExists){
+      setThemeOnDocumentHTML(localStorageTheme)
+    }
+    else if(supportsColorSchemeQuery){
+      setThemeOnDocumentHTML(mql.matches);
+      localStorage.setItem(storageKey,mql.matches)
+    }
+    else{
+      localStorage.setItem(storageKey,JSON.parse(false))
+    }
+  })()
+</script>
